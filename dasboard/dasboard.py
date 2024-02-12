@@ -110,7 +110,7 @@ def main():
         st.write("Tahun 2012:")
         st.write(f"Bulan dengan pesanan terbanyak: Bulan {max_orders_2012['Bulan']}, Jumlah Pesanan: {max_orders_2012['Jumlah Pesanan']}")
     
-    elif choice == "RECORD JANUARI":
+  elif choice == "RECORD JANUARI":
         st.header("RECORD JANUARI")
         data = load_data()
         year = st.sidebar.selectbox("Pilih Tahun", sorted(data['dteday'].dt.year.unique()))
@@ -119,3 +119,4 @@ def main():
         st.header("Rincian Detail:")
         st.write("""
             - **Bulan**: Januari - Desember
+            """)
