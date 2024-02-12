@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 def main():
     st.title("Analisis Bike Sharing")
@@ -19,59 +20,53 @@ def main():
             Informasi Atribut:
             Hour.csv dan day.csv memiliki kolom berikut, kecuali hr yang tidak tersedia di day.csv
         """)
-    
-    elif choice == "TOTAL ORDER TAHUN 2011":
-        st.header("TOTAL ORDER TAHUN 2011")
+    else:
         # Load data
-        @st.cache
-        def load_data():
-            hour_data = pd.read_csv("hour.csv")
-            return hour_data.copy()  # Membuat salinan DataFrame
+        path = os.path.dirname(__file__)
+        my_file = path+'/../alldata.csv'
+        all_df = pd.read_csv(my_file)
         
-        # Function untuk memproses data
-        def process_data(data):
-            # Filter data untuk tahun 2011
+        if choice == "TOTAL ORDER TAHUN 2011":
+            st.header("TOTAL ORDER TAHUN 2011")
+            # Memproses data
+            data = all_df.copy()
             data['dteday'] = pd.to_datetime(data['dteday'])
             data_2011 = data[data['dteday'].dt.year == 2011]
-        
-            # Hitung jumlah record order tiap bulan
             monthly_orders = data_2011.groupby(data_2011['dteday'].dt.month)['instant'].count().reset_index()
             monthly_orders.columns = ['Bulan', 'Jumlah Pesanan']
-            return monthly_orders
-        
-        # Function untuk membuat plot
-        def plot_chart(data):
+            # Membuat plot
             fig, ax = plt.subplots(figsize=(10, 6))
-            ax.bar(data['Bulan'], data['Jumlah Pesanan'], color='skyblue')
+            ax.bar(monthly_orders['Bulan'], monthly_orders['Jumlah Pesanan'], color='skyblue')
             ax.set_xlabel('Bulan')
             ax.set_ylabel('Jumlah Pesanan')
             ax.set_title('Jumlah Pesanan Tiap Bulan pada Tahun 2011')
             ax.grid(True, linestyle='--', alpha=0.7)
             st.pyplot(fig)
-        
-        # Fungsi utama
-        def main():
-            # Judul halaman
-            st.title("Analisis Record Order Tiap Bulan Tahun 2011")
-        
-            # Memuat data
-            data = load_data()
-        
-            # Memproses data
-            monthly_orders = process_data(data)
-        
-            # Membuat plot
-            plot_chart(monthly_orders)
-        
             # Detail
             st.header("Rincian Detail:")
             st.write("""
-            - **Bulan**: Januari - Desember
-            - **Jumlah Pesanan**: Jumlah record order pada bulan tersebut
+                - **Bulan**: Januari - Desember
+                - **Jumlah Pesanan**: Jumlah record order pada bulan tersebut
             """)
         
-        if __name__ == "__main__":
-            main()
+        elif choice == "RECORD BULAN TERENDAH":
+            st.header("RECORD BULAN TERENDAH")     
+            # Memproses data
+            data = all_df.copy()
+            data['dteday'] = pd.to_datetime(data['dteday'])
+            data_year = data[data['dteday'].dt.year.isin([2011, 2012])]
+            monthly_orders = data_year.groupby([data_year['dteday'].dt.year, data_year['dteday'].dt.month])['instant'].count().reset_index()
+            monthly_orders.columns = ['Tahun', 'Bulan', 'Jumlah Pesanan']
+            min_orders = monthly_orders.loc[monthly_orders['Jumlah Pesanan'].idxmin()]
+            # Membuat pie chart
+            fig, ax = plt.subplots()
+            ax.pie([min_orders['Jumlah Pesanan']], labels=[f'Bulan {min_orders["Bulan"]}'], autopct='%1.1f%%', startangle=90)
+            ax.axis('equal')
+            st.pyplot(fig)
+            st.write(f"Jumlah pesanan terendah: {min_orders['Jumlah Pesanan']}")
+
+if __name__ == "__main__":
+    main()
 
     
     elif choice == "RECORD BULAN TERENDAH":
