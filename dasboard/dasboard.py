@@ -10,7 +10,6 @@ def main():
 
     if choice == "Beranda":
         st.header("Selamat Datang di Aplikasi Analisis Bike Sharing")
-        st.image("sepeda.jpg", caption="Sumber: Unsplash", use_column_width=True)
         st.write("""
             Informasi Kumpulan Data:
             Sistem berbagi sepeda adalah generasi baru dari persewaan sepeda tradisional di mana seluruh proses mulai dari keanggotaan, penyewaan, dan pengembalian menjadi otomatis. Melalui sistem ini, pengguna dapat dengan mudah menyewa sepeda dari posisi tertentu dan kembali lagi ke posisi lain. Saat ini, terdapat lebih dari 500 program berbagi sepeda di seluruh dunia yang mencakup lebih dari 500 ribu sepeda. Saat ini, terdapat minat yang besar terhadap sistem ini karena peran pentingnya dalam masalah lalu lintas, lingkungan, dan kesehatan.
